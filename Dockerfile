@@ -1,28 +1,25 @@
-# Step 1: Build Angular Application
+# Step 1: Build Angular App
 FROM node:18 AS build
 
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install -g @angular/cli
 RUN npm install
 
-# Copy all project files
 COPY . .
 
-# Build angular app for production
 RUN ng build --configuration production
 
-# Step 2: Serve using NGINX
+# Step 2: Nginx Serving
 FROM nginx:alpine
 
-# Copy build output to nginx html folder
-COPY --from=build /app/dist/ /usr/share/nginx/html
+# REMOVE DEFAULT NGINX PAGE
+RUN rm -rf /usr/share/nginx/html/*
 
-# Expose port 80
+# ✅ COPY YOUR DIST OUTPUT
+COPY --from=build /app/dist/AngularProject/ /usr/share/nginx/html/
+
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
