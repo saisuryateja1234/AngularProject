@@ -11,14 +11,13 @@ COPY . .
 
 RUN ng build --configuration production
 
-# Step 2: Nginx Serving
+# Step 2: Serve using Nginx
 FROM nginx:alpine
 
-# REMOVE DEFAULT NGINX PAGE
 RUN rm -rf /usr/share/nginx/html/*
 
-# ✅ COPY YOUR DIST OUTPUT
-COPY --from=build /app/dist/AngularProject/ /usr/share/nginx/html/
+# ✅ Copy correct Angular build output
+COPY --from=build /app/dist/routing/browser/ /usr/share/nginx/html/
 
 EXPOSE 80
 
